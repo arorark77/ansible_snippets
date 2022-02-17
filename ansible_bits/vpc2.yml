@@ -1,0 +1,41 @@
+- name: Peered VPC
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation
+    region: us-east-1
+    vpc_cidr: 10.0.0.0/16
+    common:
+      env: prd
+      vendor: aws
+  tasks:
+    - name: set Name
+      set_fact:
+        Name:
+          Module: ec2_vpc_vnet
+        combo: 
+          combo_dict: "{{ 'Module' : ec2_vpc_vnet | combine({ common }) }}"
+    - debug:
+        var: combo_dict
+
+
+    - name: Create VPC
+      ec2_vpc_net:
+        name: rakesh-test-vpc2
+        cidr_block: 10.0.0.0/16
+        region: "{{ region }}"
+        # tags: "{{ combine({ item.key.common_tags: item.value.common_tags }) }}"
+        tags: "{{ item.key: item.value }}"       
+          # module: ec2_vpc_vnet
+          # "{{item.key}}: {{item.value}}"
+      # loop: "{{ lookup('dict', common_tags) }}"
+      with_dict: "{{ Name | combine(common_tags) }}"             
+      register: vpc
+ 
+
+
+
+      
+
+
+

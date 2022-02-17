@@ -1,0 +1,34 @@
+- name: aurora
+  hosts: localhost
+  connection: local
+  vars:
+    aurora_cluster_name: mycoolauroracluster
+    aurora_cluster_engine: aurora-mysql
+    aurora_cluster_version: 5.7.12
+    aws_region: us-east-1
+  tasks:
+    - name: look for an existing Aurora cluster using the AWS CLI
+      command: >
+        aws rds describe-db-clusters
+          --filters Name=db-cluster-id,Values={{ aurora_cluster_name }}
+          --region {{ aws_region }}
+      changed_when: false
+      register: aurora_cluster_query
+    - name: parse the response and check if our Aurora cluster is there
+      set_fact:
+        aurora_cluster: "{{ aurora_cluster_query.stdout | from_json | json_query('DBClusters[0]')}}"
+          
+    - name: create Aurora Cluster with the AWS CLI if it doesn't exist
+      command: >
+        aws rds create-db-cluster
+          --region {{ aws_region }}
+          --cli-input-json '{{ lookup('template', 'create-db-cluster.json.j2') | to_json }}'
+      when: aurora_cluster == '' # json_query returns an empty string if it doesn't resolve right, nice
+
+
+
+
+
+
+
+

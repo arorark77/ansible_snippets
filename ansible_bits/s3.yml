@@ -1,0 +1,48 @@
+- name: s3
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation
+  tasks:
+    - name: s3 object
+      aws_s3:
+        profile: pythonAutomation
+        region: us-east-1
+        bucket: rakesh202020
+        prefix: test-account-1/
+        # marker: public-cloud-dev/
+        mode: list
+      register: s3obj
+    - debug:
+        var: s3obj
+    - name: delete s3 objects
+      aws_s3:
+        profile: pythonAutomation
+        region: us-east-1
+        bucket: rakesh202020
+        object: "{{ item }}"
+        mode: delobj
+      with_items: "{{ s3obj.s3_keys }}"
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

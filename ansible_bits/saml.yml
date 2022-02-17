@@ -1,0 +1,33 @@
+- name: saml
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation
+  tasks:
+    - name: list-saml-providers
+      command:
+        'aws ec2 describe-instances --profile {{ profile }}'
+      register: output
+    - name: parse
+      set_fact:
+        ec2_output: "{{ output.stdout | from_json | json_query('Reservations[].Instances[].InstanceId') }}"
+          # ec2_output: "{{ output.stdout | json_query('Reservations[].Instances[].InstanceId') }}"
+
+    - debug:
+        var: ec2_output
+
+    - name: Assign Tag
+      command:
+        'aws ec2 create-tags --resources {{ item }} --tags Key=Name,Value=samltest'
+      with_items: "{{ ec2_output }}"
+
+
+
+
+
+
+
+
+
+
+

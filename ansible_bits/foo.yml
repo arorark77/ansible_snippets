@@ -1,0 +1,51 @@
+---
+- name: VPC
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation #Change the profile name as per profile in your aws credentials file
+    region: us-east-1
+    vpc_cidr: 10.0.0.0/16
+    vpc_name: rakesh-test-vpc
+    public_ip: 3.3.3.3
+    # peer_id: peer_2
+  tasks:
+    - name: Debug
+      debug:
+        msg: "{{ vpc_name }}-{{ peer_id | default('peer_1') }}"
+    
+    - name: find nat gateway info
+      ec2_vpc_nat_gateway_info:
+        filters:
+          vpc-id: vpc-d03ab9a9
+      register: existing_nat_gw
+
+    - name: Debug
+      debug:
+        var: existing_nat_gw.result | length
+
+    - name: Debug
+      debug:
+        var: public_ip
+      when: existing_nat_gw.result | length == 0      
+
+    - name: Debug
+      debug:
+        var: public_ip      
+      until: not public_ip | ipaddr('3.0.0.0/8')
+      retries: 5
+      delay: 10
+      
+
+
+    
+
+
+
+
+
+
+      
+
+
+

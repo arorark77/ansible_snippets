@@ -1,0 +1,27 @@
+---
+- name: KMS Key
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation #Change the profile name as per profile in your aws credentials file
+    region: us-east-1
+    vpc_cidr: 10.0.0.0/16
+  tasks:
+    - name: Create KMS Key
+      community.aws.aws_kms:
+        alias: test-kms
+        region: "{{ region }}"
+        description: an example kms key 
+        profile: "{{ profile }}"
+        policy: "{{ lookup('template', 'keypolicy.json') }}"
+
+
+
+
+
+
+
+      
+
+
+

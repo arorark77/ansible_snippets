@@ -1,0 +1,50 @@
+---
+- name: Security Group
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation #Change the profile name as per profile in your aws credentials file
+    region: us-east-1
+    vpc_cidr: 10.0.0.0/16
+  tasks:
+    - name: Create Ec2 SG
+      ec2_group:
+        name: test-sg-secondvpc
+        region: "{{ region }}"
+        description: an example EC2 group
+        profile: "{{ profile }}"
+        vpc_id: vpc-d03ab9a9
+        tags:
+          Name: test-sg
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+          # - proto: all
+          #   group_name: test-sg
+      register: sg
+      tags: sg
+
+    # - debug:
+    #     var: sg
+
+    # - name: set fact
+    #   set_fact:
+    #     sg_id: "{{ sg.group_id }}"
+    #     cacheable: yes
+
+    # - debug:
+    #     var: sg_id
+    #   tags: sgid
+
+
+
+
+
+
+
+      
+
+
+

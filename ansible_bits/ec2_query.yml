@@ -1,0 +1,38 @@
+- name: ec2-query
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation
+  tasks:
+    - name: Find EC2 instances
+      ec2_instance_info:
+        filters:
+          "tag:Name": ISS-GR-*
+      register: result
+
+    - name: Parse
+      set_fact: 
+        ec2_output: "{{ result | json_query('instances[].instance_id')}}"
+
+    - debug:
+        var: ec2_output
+  
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

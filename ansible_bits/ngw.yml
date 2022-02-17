@@ -1,0 +1,42 @@
+---
+- name: NGW
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation #Change the profile name as per profile in your aws credentials file
+    # region: us-east-1
+    # vpc_cidr: 10.0.0.0/16
+  tasks:  
+    - name: Create NAT GW
+      ec2_vpc_nat_gateway:
+        subnet_id: subnet-3c594b59
+        if_exist_do_not_create: yes
+        wait: yes
+      until: not nat_gw.nat_gateway_addresses[0].public_ip | ipaddr('3.0.0.0/2')
+      retries: 2        
+      register: nat_gw
+
+
+    - debug: 
+        var: nat_gw
+
+    # - name: terminate nat_gw
+    #   ec2_vpc_nat_gateway:
+    #     nat_gateway_id: "{{ nat_gw.nat_gateway_id }}"
+    #     state: absent
+    #     release_eip: yes
+    #     wait: yes
+    #   when: nat_gw.nat_gateway_addresses[0].public_ip | ipaddr('3.0.0.0/2')
+      
+
+
+
+
+
+
+
+
+      
+
+
+

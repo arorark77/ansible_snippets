@@ -1,0 +1,44 @@
+- name: ec2-query
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation
+  tasks:
+    - name: Find EC2 instances
+      command:
+        'aws ec2 describe-instances'
+      register:
+        result
+
+    - name: Parse
+      set_fact: 
+        ec2_output: "{{ result.stdout | from_json | json_query('Reservations[].Instances[].InstanceId')}}"
+
+    - debug:
+        var: ec2_output
+
+    - name: terminate instance
+      command:
+        'aws ec2 terminate-instances --instance-ids {{ item }}'
+      with_items: "{{ ec2_output }}"
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+---
+- name: route table
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation #Change the profile name as per profile in your aws credentials file
+    region: us-east-1
+    vpc_cidr: 10.0.0.0/16
+  tasks:
+    - name: add route to route table
+      command: |
+        aws ec2 create-route --route-table-id rtb-071aa6efa874f73ff 
+        --destination-cidr-block 10.0.0.0/8 
+        --gateway-id igw-aef784c8
+        --profile pythonAutomation
+      register: output
+
+    - debug:
+        var: output
+
+ 
+
+
+
+
+
+
+
+      
+
+
+

@@ -1,0 +1,39 @@
+---
+- name: Combine
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation #Change the profile name as per profile in your aws credentials file
+    region: us-east-1
+    vpc_cidr: 10.0.0.0/16
+    vpc_name: rakesh-test-vpc
+    public_ip: 3.3.3.3
+    common_tags:
+      env: dev
+    # peer_id: peer_2
+  tasks:
+    - name: Set Fact
+      set_fact:
+        nat_name: "ISS-GR-NAT"
+    - name: Debug
+      debug:
+        msg: "{{ {'Name':nat_name}|combine({'Region':common_tags}) }}"
+        # msg: "{{ {'Name':'iss-'+vpc_name}|combine({common_tags}) }}"
+        # msg: "{{ {'Name':'iss-'+vpc_name}|combine({'Region':region}) }}"
+    
+
+  
+      
+
+
+    
+
+
+
+
+
+
+      
+
+
+

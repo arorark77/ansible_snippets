@@ -1,0 +1,29 @@
+---
+- name: EC2 login with SSH
+  hosts: [ localhost ]
+  # connection: local
+  gather_facts: false
+  roles:
+    - role: ec2
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

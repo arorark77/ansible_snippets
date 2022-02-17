@@ -1,0 +1,17 @@
+---
+- name: route table
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation #Change the profile name as per profile in your aws credentials file
+    region: us-east-1
+    vpc_cidr: 10.0.0.0/16
+  tasks:
+    - name: add route to s3 ep
+      community.aws.ec2_vpc_endpoint:
+        region: us-east-1
+        vpc_id: vpc-d03ab9a9
+        service: com.amazonaws.us-east-1.s3
+        vpc_endpoint_id: vpce-06f75c901787ac94d
+        route_table_ids:
+          - rtb-071aa6efa874f73ff

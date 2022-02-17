@@ -1,0 +1,52 @@
+- name: cmc
+  hosts: localhost
+  connection: local
+  vars:
+    profile: pythonAutomation
+    # released: yes
+    decomed: yes
+    account:
+      name: trans-sandbox
+  tasks:
+    - name: Building or Active
+      set_fact:
+        status: "{{ 'Building' if not released else 'Active'}}"
+      when: decomed is undefined
+    - name: decommissioning
+      set_fact:
+        status:  Decommissioning
+      when: released is undefined and not decomed
+
+    - name: Suspend the account
+      block:
+        - name: get user input
+          pause:
+            prompt: "Are you sure you want to suspent {{ account.name }}? 
+            Enter {{ account.name }} to confirm, ctrl+C then 'A' to abort"
+          register: confirm_delete
+
+        - name: Suspend Account
+          set_fact:
+            status:  Suspended
+            suspended_date: "{{ ansible_date_time.date }}"
+          when: confirm_delete.user_input == account.name 
+      when: released is undefined and decomed      
+
+    - debug:
+        var: suspended_date
+
+    - debug:
+        var: suspended_date
+
+
+
+
+
+
+
+
+
+
+
+
+

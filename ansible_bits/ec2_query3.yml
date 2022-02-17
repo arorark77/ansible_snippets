@@ -1,0 +1,43 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - command: "aws ec2 describe-regions"
+    register: json_out
+
+  - set_fact:
+      region_json: "{{json_out.stdout | from_json}}"
+      region_list: []
+
+  # example of itteration over the converted json
+  - debug:
+      msg: "{{item.RegionName}}"
+    with_items: "{{region_json.Regions|default([], true)|list}}"
+
+  # Creates actual list of only region names
+  - set_fact:
+      region_list: "{{region_list + [item.RegionName] }}"
+    with_items: "{{region_json.Regions|default([], true)|list}}"
+
+  - debug:
+      var: region_list
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
